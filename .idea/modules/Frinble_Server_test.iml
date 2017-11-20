@@ -36,6 +36,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="Frinble_Server_main" />
     <orderEntry type="library" name="Gradle: io.vertx:vertx-lang-kotlin:3.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.vertx:vertx-lang-kotlin-coroutines:3.5.0" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jre8:1.1.60" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.19.3" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.3" level="project" />
