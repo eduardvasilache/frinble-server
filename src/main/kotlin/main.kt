@@ -1,11 +1,13 @@
 import io.vertx.core.Vertx
-import io.vertx.core.VertxOptions
+
+private const val CONFIG_FILENAME = "config.json"
+private const val SERVER_PORT = 8080
 
 fun main(args: Array<String>) {
-    val injector = createInjector(initVertx())
+    val vertx = Vertx.vertx()
+    val config = readConfig(vertx, CONFIG_FILENAME)
+    val injector = createInjector(vertx, config)
 
     val server = injector.instance(HttpServer::class.java)
-    server.start(8080)
+    server.start(SERVER_PORT)
 }
-
-private fun initVertx(): Vertx = Vertx.vertx(VertxOptions())

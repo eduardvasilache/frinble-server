@@ -7,5 +7,4 @@
 /.idea/libraries
 .DS_Store
 
-gradle.properties
 /.vertx
