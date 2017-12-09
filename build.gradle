@@ -3,6 +3,7 @@ version '1.0'
 
 buildscript {
     ext.kotlin_version = '1.2.0'
+    ext.coroutines_version = '0.20'
     ext.vertx_version = '3.5.0'
 
     repositories {
@@ -42,8 +43,8 @@ compileKotlin {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19.3'
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:0.19.3'
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutines_version"
 
     compile "io.vertx:vertx-core:$vertx_version"
     compile "io.vertx:vertx-lang-kotlin:$vertx_version"

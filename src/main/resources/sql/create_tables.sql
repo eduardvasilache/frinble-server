@@ -1,6 +1,6 @@
 CREATE TABLE "UserAccounts" (
     "Id"                            SERIAL          PRIMARY KEY,
-    "Email"                         VARCHAR(256)    NULL,
+    "Email"                         VARCHAR(256)    NULL UNIQUE,
     "FirstName"                     VARCHAR(100)    NULL,
     "LastName"                      VARCHAR(100)    NULL,
     "Birthdate"                     TIMESTAMP       NULL,
@@ -34,7 +34,7 @@ CREATE TABLE "UserRelationships" (
 );
 
 CREATE TABLE "UserGroups" (
-    "Id"                            SERIAL             PRIMARY KEY,
+    "Id"                            SERIAL          PRIMARY KEY,
     "OwnerUserId"                   INT             NOT NULL,
     "Name"                          VARCHAR(256)    NOT NULL,
 

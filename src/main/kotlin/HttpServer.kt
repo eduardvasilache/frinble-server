@@ -1,11 +1,11 @@
 
-import controllers.ApiController
+import api.v1.ApiController
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServer
 import io.vertx.core.http.HttpServerOptions
 import io.vertx.ext.web.Router
 
-class HttpServer(private val apiController: ApiController) {
+class HttpServer(apiController: ApiController) {
 
     private val server: HttpServer
 

@@ -1,5 +1,6 @@
-package controllers
+package api.v1
 
+import api.base.BaseController
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 
