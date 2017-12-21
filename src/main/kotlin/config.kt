@@ -1,6 +1,6 @@
 import com.fasterxml.jackson.annotation.JsonProperty
-import helpers.jsonDecode
 import io.vertx.core.Vertx
+import utils.jsonDecode
 
 fun readConfig(vertx: Vertx, filename: String): AppConfig =
         jsonDecode(vertx.fileSystem().readFileBlocking(filename).toString(Charsets.UTF_8))

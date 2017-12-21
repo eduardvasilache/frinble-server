@@ -1,4 +1,4 @@
-package helpers
+package utils
 
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.RoutingContext

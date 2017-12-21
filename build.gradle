@@ -2,7 +2,7 @@ group 'com.frinble'
 version '1.0'
 
 buildscript {
-    ext.kotlin_version = '1.2.0'
+    ext.kotlin_version = '1.2.10'
     ext.coroutines_version = '0.20'
     ext.vertx_version = '3.5.0'
 
@@ -50,10 +50,13 @@ dependencies {
     compile "io.vertx:vertx-lang-kotlin:$vertx_version"
     compile "io.vertx:vertx-lang-kotlin-coroutines:$vertx_version"
     compile "io.vertx:vertx-web:$vertx_version"
+    compile "io.vertx:vertx-auth-jwt:$vertx_version"
     compile "io.vertx:vertx-sql-common:$vertx_version"
     compile "io.vertx:vertx-mysql-postgresql-client:$vertx_version"
 
     compile 'net.mready.photon:photon:1.0.1'
+
+    compile 'org.mindrot:jbcrypt:0.4'
 
     compile 'org.slf4j:slf4j-api:1.7.24'
     compile 'org.apache.logging.log4j:log4j-core:2.1'

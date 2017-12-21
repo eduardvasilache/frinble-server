@@ -1,6 +1,6 @@
-package api.v1
+package http.api.v1
 
-import api.base.BaseController
+import http.api.base.BaseApiController
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 
@@ -8,7 +8,7 @@ class ApiController(vertx: Vertx,
                     private val authController: AuthController,
                     private val usersController: UsersController,
                     private val friendsController: FriendsController,
-                    private val activitiesController: ActivitiesController) : BaseController(vertx) {
+                    private val activitiesController: ActivitiesController) : BaseApiController(vertx) {
 
     override fun configureRouter(): Router {
         router.mountSubRouter("/v1/auth", authController.configureRouter())

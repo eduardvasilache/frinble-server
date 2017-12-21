@@ -1,29 +1,28 @@
-package api.v1
+package http.api.v1
 
-import api.base.BaseController
-import helpers.coroutineHandler
+import http.api.base.BaseApiController
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import services.FriendsService
 
 class FriendsController(vertx: Vertx,
-                        private val friendsService: FriendsService) : BaseController(vertx) {
+                        private val friendsService: FriendsService) : BaseApiController(vertx) {
 
     override fun configureRouter(): Router {
-        router.get("/").coroutineHandler { getAllFriends(it) }
+        router.get("/", true) { getAllFriends(it) }
 
-        router.post("/add").coroutineHandler { sendFriendRequest(it) }
-        router.post("/cancel").coroutineHandler { cancelFriendRequest(it) }
-        router.post("/accept").coroutineHandler { acceptFriendRequest(it) }
-        router.post("/deny").coroutineHandler { denyFriendRequest(it) }
+        router.post("/add") { sendFriendRequest(it) }
+        router.post("/cancel") { cancelFriendRequest(it) }
+        router.post("/accept") { acceptFriendRequest(it) }
+        router.post("/deny") { denyFriendRequest(it) }
 
-        router.get("/list").coroutineHandler { getFriendLists(it) }
-        router.post("/list").coroutineHandler { createFriendList(it) }
-        router.delete("/list/:id").coroutineHandler { deleteFriendList(it) }
+        router.get("/list") { getFriendLists(it) }
+        router.post("/list") { createFriendList(it) }
+        router.delete("/list/:id") { deleteFriendList(it) }
 
-        router.post("/list/:id").coroutineHandler { addFriendToFriendList(it) }
-        router.delete("/list/:id").coroutineHandler { removeFriendFromFriendList(it) }
+        router.post("/list/:id") { addFriendToFriendList(it) }
+        router.delete("/list/:id") { removeFriendFromFriendList(it) }
 
         return router
     }

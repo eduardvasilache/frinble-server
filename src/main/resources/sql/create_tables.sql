@@ -1,74 +1,68 @@
-CREATE TABLE "UserAccounts" (
-    "Id"                            SERIAL          PRIMARY KEY,
-    "Email"                         VARCHAR(256)    NULL UNIQUE,
-    "FirstName"                     VARCHAR(100)    NULL,
-    "LastName"                      VARCHAR(100)    NULL,
-    "Birthdate"                     TIMESTAMP       NULL,
-    "ImageUrl"                      VARCHAR(100)    NULL,
-    "CreatedAt"                     TIMESTAMP       NOT NULL,
-    "UpdatedAt"                     TIMESTAMP       NOT NULL,
-    "LastLoginAt"                   TIMESTAMP       NULL,
-    "AccountStatus"                 INT             NOT NULL,
-    "PasswordHash"                  VARCHAR(256)    NULL,
-    "PasswordSalt"                  VARCHAR(50)     NULL,
-    "PasswordHashAlgorith"          VARCHAR(50)     NULL,
-    "EmailConfirmationToken"        VARCHAR(256)    NULL,
-    "ResetPasswordToken"            VARCHAR(256)    NULL,
-    "ResetPasswordTokenExpiresAt"   TIMESTAMP       NULL,
-    "FacebookId"                    VARCHAR(256)    NULL,
-    "FacebookToken"                 VARCHAR(256)    NULL,
-    "GoogleId"                      VARCHAR(256)    NULL,
-    "GoogleToken"                   VARCHAR(256)    NULL
+CREATE TABLE "users" (
+    "id"                                SERIAL          PRIMARY KEY,
+    "email"                             VARCHAR(256)    NULL UNIQUE,
+    "first_name"                        VARCHAR(100)    NULL,
+    "last_name"                         VARCHAR(100)    NULL,
+    "born_at"                           TIMESTAMPTZ     NULL,
+    "avatar_url"                        VARCHAR(100)    NULL,
+    "password_hash"                     VARCHAR(256)    NULL,
+    "email_confirmation_token"          VARCHAR(256)    NULL,
+    "reset_password_token"              VARCHAR(256)    NULL,
+    "reset_password_token_expires_at"   TIMESTAMPTZ     NULL,
+    "status"                            INT             NOT NULL,
+    "created_at"                        TIMESTAMPTZ     NOT NULL,
+    "updated_at"                        TIMESTAMPTZ     NOT NULL,
+    "last_login_at"                     TIMESTAMPTZ     NULL
 );
 
-CREATE TABLE "UserRelationships" (
-    "UserId1"                       INT             NOT NULL,
-    "UserId2"                       INT             NOT NULL,
-    "Status"                        INT             NOT NULL,
-    "LastActionUserId"              INT             NOT NULL,
+CREATE TABLE "user_relationships" (
+    "user_id_1"                         INT             NOT NULL,
+    "user_id_2"                         INT             NOT NULL,
+    "status"                            INT             NOT NULL,
+    "last_action_user_id"               INT             NOT NULL,
 
-    CONSTRAINT "UserRelationships_UserId1_UserId2_Status_PK" PRIMARY KEY ("UserId1", "UserId2", "Status"),
-    CONSTRAINT "UserRelationships_UserId1_FK" FOREIGN KEY ("UserId1") REFERENCES "UserAccounts" ("Id"),
-    CONSTRAINT "UserRelationships_UserId2_FK" FOREIGN KEY ("UserId2") REFERENCES "UserAccounts" ("Id"),
-    CONSTRAINT "UserRelationships_LastActionUserId_FK" FOREIGN KEY ("LastActionUserId") REFERENCES "UserAccounts" ("Id")
+    CONSTRAINT "user_relationships_user_id_1_user_id_2_status_PK" PRIMARY KEY ("user_id_1", "user_id_2", "status"),
+    CONSTRAINT "user_relationships_user_id_1_FK" FOREIGN KEY ("user_id_1") REFERENCES "users" ("id"),
+    CONSTRAINT "user_relationships_user_id_2_FK" FOREIGN KEY ("user_id_2") REFERENCES "users" ("id"),
+    CONSTRAINT "user_relationships_last_action_user_id_FK" FOREIGN KEY ("last_action_user_id") REFERENCES "users" ("id")
 );
 
-CREATE TABLE "UserGroups" (
-    "Id"                            SERIAL          PRIMARY KEY,
-    "OwnerUserId"                   INT             NOT NULL,
-    "Name"                          VARCHAR(256)    NOT NULL,
+CREATE TABLE "user_groups" (
+    "id"                                SERIAL          PRIMARY KEY,
+    "owner_user_id"                     INT             NOT NULL,
+    "name"                              VARCHAR(256)    NOT NULL,
 
-    CONSTRAINT "UserGroups_OwnerUserId_FK" FOREIGN KEY ("OwnerUserId") REFERENCES "UserAccounts" ("Id")
+    CONSTRAINT "user_groups_owner_user_id_FK" FOREIGN KEY ("owner_user_id") REFERENCES "users" ("id")
 );
 
-CREATE TABLE "UserGroupsMembers" (
-    "UserGroupId"                   INT             NOT NULL,
-    "UserId"                        INT             NOT NULL,
-    "AddedAt"                       TIMESTAMP       NOT NULL,
+CREATE TABLE "user_group_members" (
+    "user_group_id"                     INT             NOT NULL,
+    "user_id"                           INT             NOT NULL,
+    "added_at"                          TIMESTAMPTZ     NOT NULL,
 
-    CONSTRAINT "UserGroupsMembers_UserGroupId_UserId_PK" PRIMARY KEY ("UserGroupId", "UserId"),
-    CONSTRAINT "UserGroupsMembers_UserGroupId_FK" FOREIGN KEY ("UserGroupId") REFERENCES "UserGroups" ("Id"),
-    CONSTRAINT "UserGroupsMembers_UserId_FK" FOREIGN KEY ("UserId") REFERENCES "UserAccounts" ("Id")
+    CONSTRAINT "user_group_members_user_group_id_user_id_PK" PRIMARY KEY ("user_group_id", "user_id"),
+    CONSTRAINT "user_group_members_user_group_id_FK" FOREIGN KEY ("user_group_id") REFERENCES "user_groups" ("id"),
+    CONSTRAINT "user_group_members_user_id_FK" FOREIGN KEY ("user_id") REFERENCES "users" ("id")
 );
 
-CREATE TABLE "Activities" (
-    "Id"                            SERIAL          PRIMARY KEY,
-    "OwnerUserId"                   INT             NOT NULL,
-    "StartTime"                     TIMESTAMP       NOT NULL,
-    "EndTime"                       TIMESTAMP       NOT NULL,
-    "Type"                          INT             NULL,
-    "Location"                      INT             NULL,
-    "Slots"                         INT             NULL,
+CREATE TABLE "activities" (
+    "id"                                SERIAL          PRIMARY KEY,
+    "owner_user_id"                     INT             NOT NULL,
+    "starts_at"                         TIMESTAMPTZ     NOT NULL,
+    "ends_at"                           TIMESTAMPTZ     NOT NULL,
+    "type"                              INT             NULL,
+    "location"                          INT             NULL,
+    "slots"                             INT             NULL,
 
-    CONSTRAINT "Activities_OwnerUserId_FK" FOREIGN KEY ("OwnerUserId") REFERENCES "UserAccounts" ("Id")
+    CONSTRAINT "activities_owner_user_id_FK" FOREIGN KEY ("owner_user_id") REFERENCES "users" ("id")
 );
 
-CREATE TABLE "ActivitiesMembers" (
-    "ActivityId"                    INT             NOT NULL,
-    "UserId"                        INT             NOT NULL,
-    "Status"                        INT             NOT NULL,
+CREATE TABLE "activity_members" (
+    "activity_id"                       INT             NOT NULL,
+    "user_id"                           INT             NOT NULL,
+    "status"                            INT             NOT NULL,
 
-    CONSTRAINT "ActivitiesMembers_PK" PRIMARY KEY ("ActivityId", "UserId"),
-    CONSTRAINT "ActivitiesMember_ActivityId_FK" FOREIGN KEY ("ActivityId") REFERENCES "Activities" ("Id"),
-    CONSTRAINT "ActivitiesMember_UserId_FK" FOREIGN KEY ("UserId") REFERENCES "UserAccounts" ("Id")
+    CONSTRAINT "activity_members_PK" PRIMARY KEY ("activity_id", "user_id"),
+    CONSTRAINT "ActivitiesMember_activity_id_FK" FOREIGN KEY ("activity_id") REFERENCES "activities" ("id"),
+    CONSTRAINT "ActivitiesMember_user_id_FK" FOREIGN KEY ("user_id") REFERENCES "users" ("id")
 );

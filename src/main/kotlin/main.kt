@@ -1,7 +1,7 @@
 import io.vertx.core.Vertx
 
 private const val CONFIG_FILENAME = "config.json"
-private const val SERVER_PORT = 80
+private const val SERVER_PORT = 8080
 
 fun main(args: Array<String>) {
     val vertx = Vertx.vertx()

@@ -1,28 +1,27 @@
-package api.v1
+package http.api.v1
 
-import api.base.BaseController
-import helpers.coroutineHandler
+import http.api.base.BaseApiController
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import services.ActivitiesService
 
 class ActivitiesController(vertx: Vertx,
-                           private val activitiesService: ActivitiesService) : BaseController(vertx) {
+                           private val activitiesService: ActivitiesService) : BaseApiController(vertx) {
 
     override fun configureRouter(): Router {
-        router.get("/").coroutineHandler { getAllActivities(it) }
-        router.get("/:id").coroutineHandler { getActivityById(it) }
+        router.get("/") { getAllActivities(it) }
+        router.get("/:id") { getActivityById(it) }
 
-        router.post("/").coroutineHandler { createActivity(it) }
-        router.delete("/:id").coroutineHandler { deleteActivity(it) }
+        router.post("/") { createActivity(it) }
+        router.delete("/:id") { deleteActivity(it) }
 
-        router.post("/:id/join").coroutineHandler { sendJoinRequest(it) }
-        router.post("/:id/cancel").coroutineHandler { cancelJoinRequest(it) }
-        router.post("/:id/leave").coroutineHandler { leaveActivity(it) }
+        router.post("/:id/join") { sendJoinRequest(it) }
+        router.post("/:id/cancel") { cancelJoinRequest(it) }
+        router.post("/:id/leave") { leaveActivity(it) }
 
-        router.post("/:id/accept").coroutineHandler { acceptUser(it) }
-        router.post("/:id/deny").coroutineHandler { denyUser(it) }
+        router.post("/:id/accept") { acceptUser(it) }
+        router.post("/:id/deny") { denyUser(it) }
 
         return router
     }
