@@ -1,6 +1,6 @@
 package http.api.v1
 
-import http.api.base.BaseApiController
+import http.api.BaseApiController
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext

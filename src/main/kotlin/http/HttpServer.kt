@@ -1,5 +1,5 @@
-
-import http.api.v1.ApiController
+package http
+import http.api.ApiController
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServer
 import io.vertx.core.http.HttpServerOptions

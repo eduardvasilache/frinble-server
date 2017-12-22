@@ -1,22 +1,26 @@
 package http.api.v1
 
-import http.api.base.BaseApiController
+import http.api.BaseApiController
 import io.vertx.core.Vertx
 import io.vertx.core.json.Json
+import io.vertx.ext.auth.jwt.JWTAuth
+import io.vertx.ext.auth.jwt.JWTOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
+import io.vertx.kotlin.core.json.JsonObject
+import models.Account
 import services.AuthService
-import utils.applicationJson
 
 class AuthController(vertx: Vertx,
-                     private val authService: AuthService) : BaseApiController(vertx) {
+                     private val authService: AuthService,
+                     private val jwtAuth: JWTAuth) : BaseApiController(vertx) {
 
     override fun configureRouter(): Router {
         router.post("/register", false) { register(it) }
+        router.post("/confirm", false) { confirmEmail(it) }
         router.post("/login", false) { login(it) }
         router.post("/password/reset", false) { resetPassword(it) }
         router.post("/password/reset/confirm", false) { confirmResetPassword(it) }
-        router.post("/revoke_tokens", false) { revokeTokens(it) }
 
         return router
     }
@@ -26,15 +30,33 @@ class AuthController(vertx: Vertx,
         val password = getParamOrThrow(context, "password")
 
         val account = authService.register(email, password)
+        val token = generateToken(account)
 
-        context.response().applicationJson().end(Json.encode(account))
+        sendJsonResponse(context, JsonObject(
+                "token" to token,
+                "account" to account
+        ))
+    }
+
+    private suspend fun confirmEmail(context: RoutingContext) {
+        val token = getParamOrThrow(context, "token")
+
+        val success = authService.confirmEmail(token)
+
+        sendJsonResponse(context, Json.encode(success))
     }
 
     private suspend fun login(context: RoutingContext) {
         val email = getParamOrThrow(context, "email")
         val password = getParamOrThrow(context, "password")
 
-        context.response().end("Trying to login with email $email and password $password")
+        val account = authService.login(email, password)
+        val token = generateToken(account)
+
+        sendJsonResponse(context, JsonObject(
+                "token" to token,
+                "account" to account
+        ))
     }
 
     private suspend fun resetPassword(context: RoutingContext) {
@@ -49,10 +71,10 @@ class AuthController(vertx: Vertx,
         context.response().end("Trying to confirm password reset for token $token")
     }
 
-    private suspend fun revokeTokens(context: RoutingContext) {
-        val userId = getParamOrThrow(context, "userId")
-
-        context.response().end("Trying to revoke all tokens for user with id $userId")
+    private fun generateToken(account: Account): String {
+        return jwtAuth.generateToken(JsonObject(
+                "userId" to account.id
+        ), JWTOptions())
     }
 
 }

@@ -1,6 +1,9 @@
-package http.api.v1
+package http.api
 
-import http.api.base.BaseApiController
+import http.api.v1.ActivitiesController
+import http.api.v1.AuthController
+import http.api.v1.FriendsController
+import http.api.v1.UsersController
 import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 

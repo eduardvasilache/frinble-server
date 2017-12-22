@@ -1,13 +1,12 @@
 package repositories
 
+import entities.AccountEntity
 import io.vertx.core.json.JsonObject
 import io.vertx.ext.asyncsql.AsyncSQLClient
-import models.Account
-import org.mindrot.jbcrypt.BCrypt
 import utils.query
 import utils.toIsoString
+import utils.update
 import java.time.ZonedDateTime
-import java.util.*
 import javax.inject.Singleton
 
 const val ACCOUNT_STATUS_UNCONFIRMED = 1
@@ -15,28 +14,37 @@ const val ACCOUNT_STATUS_CONFIRMED = 2
 const val ACCOUNT_STATUS_LOCKED = 3
 
 @Singleton
-class UsersRepository(sqlClient: AsyncSQLClient) : BaseRepository(sqlClient) {
+class AccountsRepository(sqlClient: AsyncSQLClient) : BaseRepository(sqlClient) {
 
-    suspend fun getAccounts(): List<Account> {
+    suspend fun getAccounts(): List<AccountEntity> {
         val query = """
             SELECT * FROM "users"
         """
 
-        return getConnection().query(query).rows.map { it.toAccount() }
+        return getConnection().query(query).rows.map { it.toAccountEntity() }
     }
 
-    suspend fun getAccountById(id: Long): Account? {
+    suspend fun getAccountById(id: Long): AccountEntity? {
         val query = """
             SELECT * FROM "users"
             WHERE "id" = ?
         """
 
-        val result = getConnection().query(query, listOf(id)).rows.firstOrNull() ?: return null
-
-        return result.toAccount()
+        val result = getConnection().query(query, listOf(id)).rows.first()
+        return result.toAccountEntity()
     }
 
-    suspend fun register(email: String, password: String): Long {
+    suspend fun getAccountByEmail(email: String): AccountEntity? {
+        val query = """
+            SELECT * FROM "users"
+            WHERE "email" = ?
+        """
+
+        val result = getConnection().query(query, listOf(email)).rows.first()
+        return result.toAccountEntity()
+    }
+
+    suspend fun register(email: String, passwordHash: String, emailConfirmationToken: String): Long {
         val query = """
             INSERT INTO "users" (
                 "email",
@@ -50,32 +58,55 @@ class UsersRepository(sqlClient: AsyncSQLClient) : BaseRepository(sqlClient) {
             RETURNING "id"
         """
 
-        val salt = BCrypt.gensalt()
-        val hash = BCrypt.hashpw(password, salt)
-
         val now = ZonedDateTime.now().toIsoString()
-        val emailConfirmationToken = UUID.randomUUID().toString()
 
         val values = listOf(
                 email,
-                hash,
+                passwordHash,
                 emailConfirmationToken,
                 ACCOUNT_STATUS_UNCONFIRMED,
                 now,
                 now
         )
 
-        val result = getConnection().query(query, values).rows.firstOrNull()
-
-        return result!!.getLong("id")
+        val result = getConnection().query(query, values).rows.first()
+        return result.getLong("id")
     }
 
-    private fun JsonObject.toAccount() = Account(
+    suspend fun confirmEmail(token: String): Boolean {
+        val query = """
+            UPDATE "users"
+            SET
+                "email_confirmation_token" = ?,
+                "status" = ?,
+                "updated_at" = ?
+            WHERE "email_confirmation_token" = ?
+        """
+
+        val now = ZonedDateTime.now().toIsoString()
+
+        val values = listOf("", ACCOUNT_STATUS_CONFIRMED, now, token)
+
+        val result = getConnection().update(query, values).updated
+
+        return result > 0
+    }
+
+    private fun JsonObject.toAccountEntity() = AccountEntity(
             id = getLong("id"),
             status = getInteger("status"),
             firstName = getString("first_name"),
             lastName = getString("last_name"),
-            email = getString("email")
+            email = getString("email"),
+            birthDate = getString("born_at")?.let { ZonedDateTime.parse(it) },
+            avatarUrl = getString("avatar_url"),
+            passwordHash = getString("password_hash"),
+            emailConfirmationToken = getString("email_confirmation_token"),
+            resetPasswordToken = getString("reset_password_token"),
+            resetPasswordTokenExpiryDate = getString("reset_password_token_expires_at")?.let { ZonedDateTime.parse(it) },
+            creationDate = getString("created_at").let { ZonedDateTime.parse(it) },
+            lastUpdateDate = getString("updated_at")?.let { ZonedDateTime.parse(it) },
+            lastLoginDate = getString("last_login_at")?.let { ZonedDateTime.parse(it) }
     )
 
 }

@@ -1,12 +1,17 @@
 package services
 
+import entities.toAccount
+import http.api.UserNotFoundException
 import models.Account
-import repositories.UsersRepository
+import repositories.AccountsRepository
 import javax.inject.Singleton
 
 @Singleton
-class UsersService(private val usersRepository: UsersRepository) {
+class UsersService(private val accountsRepository: AccountsRepository) {
 
-    suspend fun getAllUsers(): List<Account> = usersRepository.getAccounts()
+    suspend fun getAllUsers(): List<Account> = accountsRepository.getAccounts().map { it.toAccount() }
+
+    suspend fun getUserById(id: Long): Account = accountsRepository.getAccountById(id)?.toAccount()
+            ?: throw UserNotFoundException()
 
 }
