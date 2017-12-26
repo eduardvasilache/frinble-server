@@ -32,10 +32,7 @@ class AuthController(vertx: Vertx,
         val account = authService.register(email, password)
         val token = generateToken(account)
 
-        sendJsonResponse(context, JsonObject(
-                "token" to token,
-                "account" to account
-        ))
+        sendJsonResponse(context, JsonObject("token" to token, "account" to account))
     }
 
     private suspend fun confirmEmail(context: RoutingContext) {
@@ -53,10 +50,7 @@ class AuthController(vertx: Vertx,
         val account = authService.login(email, password)
         val token = generateToken(account)
 
-        sendJsonResponse(context, JsonObject(
-                "token" to token,
-                "account" to account
-        ))
+        sendJsonResponse(context, JsonObject("token" to token, "account" to account))
     }
 
     private suspend fun resetPassword(context: RoutingContext) {
@@ -72,9 +66,7 @@ class AuthController(vertx: Vertx,
     }
 
     private fun generateToken(account: Account): String {
-        return jwtAuth.generateToken(JsonObject(
-                "userId" to account.id
-        ), JWTOptions())
+        return jwtAuth.generateToken(JsonObject("userId" to account.id), JWTOptions())
     }
 
 }

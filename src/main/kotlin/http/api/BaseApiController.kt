@@ -13,12 +13,6 @@ import utils.coroutineHandler
 import utils.textPlain
 import javax.inject.Inject
 
-data class ResponseWrapper(val error: ErrorResponse? = null,
-                           val data: Any? = null)
-
-data class ErrorResponse(val code: Int,
-                         val message: String)
-
 abstract class BaseApiController(vertx: Vertx) : BaseController(vertx) {
 
     @field:Inject

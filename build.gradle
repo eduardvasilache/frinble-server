@@ -53,6 +53,7 @@ dependencies {
     compile "io.vertx:vertx-auth-jwt:$vertx_version"
     compile "io.vertx:vertx-sql-common:$vertx_version"
     compile "io.vertx:vertx-mysql-postgresql-client:$vertx_version"
+    compile "io.vertx:vertx-mail-client:$vertx_version"
 
     compile 'net.mready.photon:photon:1.0.1'
 

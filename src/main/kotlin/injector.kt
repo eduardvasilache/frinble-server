@@ -3,6 +3,8 @@ import io.vertx.ext.asyncsql.AsyncSQLClient
 import io.vertx.ext.asyncsql.PostgreSQLClient
 import io.vertx.ext.auth.jwt.JWTAuth
 import io.vertx.ext.auth.jwt.JWTAuthOptions
+import io.vertx.ext.mail.MailClient
+import io.vertx.ext.mail.MailConfig
 import io.vertx.kotlin.core.json.JsonObject
 import io.vertx.kotlin.ext.auth.KeyStoreOptions
 import net.mready.photon.Injector
@@ -10,7 +12,7 @@ import net.mready.photon.Provides
 import javax.inject.Singleton
 
 fun createInjector(vertx: Vertx, config: AppConfig): Injector = Injector.Builder()
-        .modules(AppModule(config), VertxModule(vertx), AuthModule())
+        .modules(AppModule(config), VertxModule(vertx))
         .autoInjectFields(true)
         .build()
 
@@ -27,16 +29,27 @@ class VertxModule(private val vertx: Vertx) {
     fun vertx(): Vertx = vertx
 
     @Provides
-    fun sqlClient(vertx: Vertx, config: AppConfig): AsyncSQLClient = PostgreSQLClient.createShared(vertx, JsonObject(
-            "host" to config.databaseConfig.host,
-            "username" to config.databaseConfig.username,
-            "password" to config.databaseConfig.password,
-            "database" to config.databaseConfig.database
-    ))
+    fun sqlClient(vertx: Vertx, config: AppConfig): AsyncSQLClient {
+        val databaseConfig = JsonObject(
+                "host" to config.databaseConfig.host,
+                "username" to config.databaseConfig.username,
+                "password" to config.databaseConfig.password,
+                "database" to config.databaseConfig.database
+        )
 
-}
+        return PostgreSQLClient.createShared(vertx, databaseConfig)
+    }
 
-class AuthModule {
+    @Provides
+    fun mailClient(vertx: Vertx, config: AppConfig): MailClient {
+        val mailClientConfig = MailConfig()
+        mailClientConfig.hostname = config.emailConfig.host
+        mailClientConfig.port = config.emailConfig.port
+        mailClientConfig.username = config.emailConfig.username
+        mailClientConfig.password = config.emailConfig.password
+
+        return MailClient.createShared(vertx, mailClientConfig)
+    }
 
     @Provides
     @Singleton

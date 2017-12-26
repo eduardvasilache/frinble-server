@@ -47,9 +47,10 @@
     <orderEntry type="library" name="Gradle: io.vertx:vertx-core:3.5.0" level="project" />
     <orderEntry type="library" name="Gradle: io.vertx:vertx-mysql-postgresql-client:3.5.0" level="project" />
     <orderEntry type="library" name="Gradle: io.vertx:vertx-sql-common:3.5.0" level="project" />
+    <orderEntry type="library" name="Gradle: io.vertx:vertx-mail-client:3.5.0" level="project" />
     <orderEntry type="library" name="Gradle: net.mready.photon:photon:1.0.1" level="project" />
     <orderEntry type="library" name="Gradle: org.mindrot:jbcrypt:0.4" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.module:jackson-module-kotlin:2.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.module:jackson-module-kotlin:2.9.2" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-slf4j-impl:2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.24" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-core:2.1" level="project" />
@@ -68,8 +69,8 @@
     <orderEntry type="library" name="Gradle: io.netty:netty-buffer:4.1.15.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-resolver:4.1.15.Final" level="project" />
     <orderEntry type="library" name="Gradle: io.netty:netty-common:4.1.15.Final" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.9.1" level="project" />
-    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.9.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.9.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.9.2" level="project" />
     <orderEntry type="library" name="Gradle: io.vertx:vertx-bridge-common:3.5.0" level="project" />
     <orderEntry type="library" name="Gradle: com.github.mauricio:postgresql-async_2.12:0.2.21" level="project" />
     <orderEntry type="library" name="Gradle: com.github.mauricio:mysql-async_2.12:0.2.21" level="project" />
