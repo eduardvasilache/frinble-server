@@ -19,8 +19,14 @@ class EmailService(private val mailClientProvider: Provider<MailClient>) {
         sendEmail(message)
     }
 
-    suspend fun sendResetPasswordEmail(email: String, token: String) {
+    suspend fun sendUpdatePasswordEmail(email: String, code: String) {
+        val message = MailMessage()
+        message.subject = "Instructions to change your password"
+        message.from = "hello@frinble.com (Frinble)"
+        message.to = listOf("eduard.vasilache@mready.net")
+        message.html = "The code to change your password is $code"
 
+        sendEmail(message)
     }
 
     private suspend fun sendEmail(message: MailMessage) {

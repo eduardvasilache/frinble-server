@@ -2,7 +2,6 @@ package http.api.v1
 
 import http.api.BaseApiController
 import io.vertx.core.Vertx
-import io.vertx.core.json.Json
 import io.vertx.ext.auth.jwt.JWTAuth
 import io.vertx.ext.auth.jwt.JWTOptions
 import io.vertx.ext.web.Router
@@ -19,8 +18,8 @@ class AuthController(vertx: Vertx,
         router.post("/register", false) { register(it) }
         router.post("/confirm", false) { confirmEmail(it) }
         router.post("/login", false) { login(it) }
-        router.post("/password/reset", false) { resetPassword(it) }
-        router.post("/password/reset/confirm", false) { confirmResetPassword(it) }
+        router.post("/password/challenge", false) { sendUpdatePasswordChallenge(it) }
+        router.post("/password/change", false) { updatePassword(it) }
 
         return router
     }
@@ -38,9 +37,8 @@ class AuthController(vertx: Vertx,
     private suspend fun confirmEmail(context: RoutingContext) {
         val token = getParamOrThrow(context, "token")
 
-        val success = authService.confirmEmail(token)
-
-        sendJsonResponse(context, Json.encode(success))
+        authService.confirmEmail(token)
+        sendJsonResponse(context, null)
     }
 
     private suspend fun login(context: RoutingContext) {
@@ -53,16 +51,20 @@ class AuthController(vertx: Vertx,
         sendJsonResponse(context, JsonObject("token" to token, "account" to account))
     }
 
-    private suspend fun resetPassword(context: RoutingContext) {
-        val userId = getParamOrThrow(context, "userId")
+    private suspend fun sendUpdatePasswordChallenge(context: RoutingContext) {
+        val email = getParamOrThrow(context, "email")
 
-        context.response().end("Trying to reset password for user with id $userId")
+        authService.sendUpdatePasswordChallenge(email)
+        sendJsonResponse(context, null)
     }
 
-    private suspend fun confirmResetPassword(context: RoutingContext) {
-        val token = getParamOrThrow(context, "token")
+    private suspend fun updatePassword(context: RoutingContext) {
+        val email = getParamOrThrow(context, "email")
+        val password = getParamOrThrow(context, "password")
+        val challenge = getParamOrThrow(context, "challenge")
 
-        context.response().end("Trying to confirm password reset for token $token")
+        authService.updatePassword(email, password, challenge)
+        sendJsonResponse(context, null)
     }
 
     private fun generateToken(account: Account): String {

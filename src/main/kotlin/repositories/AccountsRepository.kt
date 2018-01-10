@@ -85,7 +85,46 @@ class AccountsRepository(sqlClient: AsyncSQLClient) : BaseRepository(sqlClient) 
 
         val now = ZonedDateTime.now().toIsoString()
 
-        val values = listOf("", ACCOUNT_STATUS_CONFIRMED, now, token)
+        val values = listOf(null, ACCOUNT_STATUS_CONFIRMED, now, token)
+
+        val result = getConnection().update(query, values).updated
+
+        return result > 0
+    }
+
+    suspend fun saveUpdatePasswordChallenge(userId: Long, challenge: String, challengeExpiryDate: ZonedDateTime): Boolean {
+        val query = """
+            UPDATE "users"
+            SET
+                "reset_password_token" = ?,
+                "reset_password_token_expires_at" = ?,
+                "updated_at" = ?
+            WHERE "id" = ?
+        """
+
+        val now = ZonedDateTime.now().toIsoString()
+
+        val values = listOf(challenge, challengeExpiryDate.toIsoString(), now, userId)
+
+        val result = getConnection().update(query, values).updated
+
+        return result > 0
+    }
+
+    suspend fun updatePassword(email: String, passwordHash: String): Boolean {
+        val query = """
+            UPDATE "users"
+            SET
+                "password_hash" = ?,
+                "update_password_challenge" = ?,
+                "update_password_challenge_expires_at" = ?,
+                "updated_at" = ?
+            WHERE "email" = ?
+        """
+
+        val now = ZonedDateTime.now().toIsoString()
+
+        val values = listOf(passwordHash, null, null, now, email)
 
         val result = getConnection().update(query, values).updated
 
@@ -102,8 +141,8 @@ class AccountsRepository(sqlClient: AsyncSQLClient) : BaseRepository(sqlClient) 
             avatarUrl = getString("avatar_url"),
             passwordHash = getString("password_hash"),
             emailConfirmationToken = getString("email_confirmation_token"),
-            resetPasswordToken = getString("reset_password_token"),
-            resetPasswordTokenExpiryDate = getString("reset_password_token_expires_at")?.let { ZonedDateTime.parse(it) },
+            updatePasswordChallenge = getString("update_password_challenge"),
+            updatePasswordChallengeExpiryDate = getString("update_password_challenge_expires_at")?.let { ZonedDateTime.parse(it) },
             creationDate = getString("created_at").let { ZonedDateTime.parse(it) },
             lastUpdateDate = getString("updated_at")?.let { ZonedDateTime.parse(it) },
             lastLoginDate = getString("last_login_at")?.let { ZonedDateTime.parse(it) }
