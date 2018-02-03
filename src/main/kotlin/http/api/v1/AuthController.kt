@@ -10,9 +10,11 @@ import io.vertx.kotlin.core.json.JsonObject
 import models.Account
 import services.AuthService
 
-class AuthController(vertx: Vertx,
-                     private val authService: AuthService,
-                     private val jwtAuth: JWTAuth) : BaseApiController(vertx) {
+class AuthController(
+    vertx: Vertx,
+    private val authService: AuthService,
+    private val jwtAuth: JWTAuth
+) : BaseApiController(vertx) {
 
     override fun configureRouter(): Router {
         router.post("/register", false) { register(it) }

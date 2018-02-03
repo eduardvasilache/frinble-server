@@ -6,8 +6,10 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import services.FriendsService
 
-class FriendsController(vertx: Vertx,
-                        private val friendsService: FriendsService) : BaseApiController(vertx) {
+class FriendsController(
+    vertx: Vertx,
+    private val friendsService: FriendsService
+) : BaseApiController(vertx) {
 
     override fun configureRouter(): Router {
         router.get("/", true) { getAllFriends(it) }

@@ -2,8 +2,8 @@ group 'com.frinble'
 version '1.0'
 
 buildscript {
-    ext.kotlin_version = '1.2.10'
-    ext.coroutines_version = '0.20'
+    ext.kotlin_version = '1.2.21'
+    ext.coroutines_version = '0.22.1'
     ext.vertx_version = '3.5.0'
 
     repositories {
@@ -42,7 +42,7 @@ compileKotlin {
 }
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$coroutines_version"
 
@@ -59,7 +59,7 @@ dependencies {
 
     compile 'org.mindrot:jbcrypt:0.4'
 
-    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.2"
+    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.4"
 
     compile 'org.slf4j:slf4j-api:1.7.24'
     compile 'org.apache.logging.log4j:log4j-core:2.1'

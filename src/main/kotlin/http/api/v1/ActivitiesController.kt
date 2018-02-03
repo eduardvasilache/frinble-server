@@ -6,8 +6,10 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import services.ActivitiesService
 
-class ActivitiesController(vertx: Vertx,
-                           private val activitiesService: ActivitiesService) : BaseApiController(vertx) {
+class ActivitiesController(
+    vertx: Vertx,
+    private val activitiesService: ActivitiesService
+) : BaseApiController(vertx) {
 
     override fun configureRouter(): Router {
         router.get("/") { getAllActivities(it) }

@@ -19,10 +19,10 @@ abstract class BaseApiController(vertx: Vertx) : BaseController(vertx) {
     private lateinit var jwtAuth: JWTAuth
 
     protected fun getParamOrThrow(context: RoutingContext, parameterName: String) =
-            context.request().getParam(parameterName) ?: invalidParametersException(parameterName)
+        context.request().getParam(parameterName) ?: invalidParametersException(parameterName)
 
-    private fun invalidParametersException(parameterName: String): Nothing
-            = throw InvalidParameterException(parameterName)
+    private fun invalidParametersException(parameterName: String): Nothing =
+        throw InvalidParameterException(parameterName)
 
     protected fun sendJsonResponse(context: RoutingContext, obj: Any?) {
         context.response().applicationJson().end(Json.encode(ResponseWrapper(data = obj)))
@@ -44,8 +44,11 @@ abstract class BaseApiController(vertx: Vertx) : BaseController(vertx) {
         route(HttpMethod.DELETE, path, requireAuth, fn)
     }
 
-    private fun Router.route(method: HttpMethod, path: String, requireAuth: Boolean, fn: suspend (RoutingContext) -> Unit) {
+    private fun Router.route(
+        method: HttpMethod, path: String, requireAuth: Boolean, fn: suspend (RoutingContext) -> Unit
+    ) {
         if (requireAuth) {
+            // TODO: Create a custom ApiAuthHandler
             route(method, path).handler(JWTAuthHandler.create(jwtAuth))
         }
 

@@ -1,4 +1,5 @@
 package http
+
 import http.api.ApiController
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpServer
@@ -15,8 +16,8 @@ class HttpServer(apiController: ApiController) {
         router.mountSubRouter("/api", apiController.configureRouter())
 
         server = Vertx.vertx()
-                .createHttpServer(HttpServerOptions())
-                .requestHandler { router.accept(it) }
+            .createHttpServer(HttpServerOptions())
+            .requestHandler { router.accept(it) }
     }
 
     fun start(port: Int) {

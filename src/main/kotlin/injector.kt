@@ -12,9 +12,9 @@ import net.mready.photon.Provides
 import javax.inject.Singleton
 
 fun createInjector(vertx: Vertx, config: AppConfig): Injector = Injector.Builder()
-        .modules(AppModule(config), VertxModule(vertx))
-        .autoInjectFields(true)
-        .build()
+    .modules(AppModule(config), VertxModule(vertx))
+    .autoInjectFields(true)
+    .build()
 
 class AppModule(private val config: AppConfig) {
     @Provides
@@ -31,10 +31,10 @@ class VertxModule(private val vertx: Vertx) {
     @Provides
     fun sqlClient(vertx: Vertx, config: AppConfig): AsyncSQLClient {
         val databaseConfig = JsonObject(
-                "host" to config.databaseConfig.host,
-                "username" to config.databaseConfig.username,
-                "password" to config.databaseConfig.password,
-                "database" to config.databaseConfig.database
+            "host" to config.databaseConfig.host,
+            "username" to config.databaseConfig.username,
+            "password" to config.databaseConfig.password,
+            "database" to config.databaseConfig.database
         )
 
         return PostgreSQLClient.createShared(vertx, databaseConfig)

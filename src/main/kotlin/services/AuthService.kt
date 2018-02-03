@@ -11,8 +11,10 @@ import java.util.*
 import javax.inject.Singleton
 
 @Singleton
-class AuthService(private val accountsRepository: AccountsRepository,
-                  private val emailService: EmailService) {
+class AuthService(
+    private val accountsRepository: AccountsRepository,
+    private val emailService: EmailService
+) {
 
     suspend fun register(email: String, password: String): Account {
         val salt = BCrypt.gensalt()

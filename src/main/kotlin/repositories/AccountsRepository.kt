@@ -61,12 +61,12 @@ class AccountsRepository(sqlClient: AsyncSQLClient) : BaseRepository(sqlClient) 
         val now = ZonedDateTime.now().toIsoString()
 
         val values = listOf(
-                email,
-                passwordHash,
-                emailConfirmationToken,
-                ACCOUNT_STATUS_UNCONFIRMED,
-                now,
-                now
+            email,
+            passwordHash,
+            emailConfirmationToken,
+            ACCOUNT_STATUS_UNCONFIRMED,
+            now,
+            now
         )
 
         val result = getConnection().query(query, values).rows.first()
@@ -92,7 +92,11 @@ class AccountsRepository(sqlClient: AsyncSQLClient) : BaseRepository(sqlClient) 
         return result > 0
     }
 
-    suspend fun saveUpdatePasswordChallenge(userId: Long, challenge: String, challengeExpiryDate: ZonedDateTime): Boolean {
+    suspend fun saveUpdatePasswordChallenge(
+        userId: Long,
+        challenge: String,
+        challengeExpiryDate: ZonedDateTime
+    ): Boolean {
         val query = """
             UPDATE "users"
             SET
@@ -132,20 +136,24 @@ class AccountsRepository(sqlClient: AsyncSQLClient) : BaseRepository(sqlClient) 
     }
 
     private fun JsonObject.toAccountEntity() = AccountEntity(
-            id = getLong("id"),
-            status = getInteger("status"),
-            firstName = getString("first_name"),
-            lastName = getString("last_name"),
-            email = getString("email"),
-            birthDate = getString("born_at")?.let { ZonedDateTime.parse(it) },
-            avatarUrl = getString("avatar_url"),
-            passwordHash = getString("password_hash"),
-            emailConfirmationToken = getString("email_confirmation_token"),
-            updatePasswordChallenge = getString("update_password_challenge"),
-            updatePasswordChallengeExpiryDate = getString("update_password_challenge_expires_at")?.let { ZonedDateTime.parse(it) },
-            creationDate = getString("created_at").let { ZonedDateTime.parse(it) },
-            lastUpdateDate = getString("updated_at")?.let { ZonedDateTime.parse(it) },
-            lastLoginDate = getString("last_login_at")?.let { ZonedDateTime.parse(it) }
+        id = getLong("id"),
+        status = getInteger("status"),
+        firstName = getString("first_name"),
+        lastName = getString("last_name"),
+        email = getString("email"),
+        birthDate = getString("born_at")?.let { ZonedDateTime.parse(it) },
+        avatarUrl = getString("avatar_url"),
+        passwordHash = getString("password_hash"),
+        emailConfirmationToken = getString("email_confirmation_token"),
+        updatePasswordChallenge = getString("update_password_challenge"),
+        updatePasswordChallengeExpiryDate = getString("update_password_challenge_expires_at")?.let {
+            ZonedDateTime.parse(
+                it
+            )
+        },
+        creationDate = getString("created_at").let { ZonedDateTime.parse(it) },
+        lastUpdateDate = getString("updated_at")?.let { ZonedDateTime.parse(it) },
+        lastLoginDate = getString("last_login_at")?.let { ZonedDateTime.parse(it) }
     )
 
 }

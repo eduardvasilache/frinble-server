@@ -6,8 +6,10 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import services.UsersService
 
-class UsersController(vertx: Vertx,
-                      private val usersService: UsersService) : BaseApiController(vertx) {
+class UsersController(
+    vertx: Vertx,
+    private val usersService: UsersService
+) : BaseApiController(vertx) {
 
     override fun configureRouter(): Router {
         router.get("/") { context -> getAllUsers(context) }
